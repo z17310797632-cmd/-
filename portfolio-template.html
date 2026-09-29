@@ -846,7 +846,7 @@
     }
     .hand-ring-stage:has(.hand-ring-card:hover) .hand-ring-card,
     .hand-ring-stage:has(.hand-ring-card:focus-visible) .hand-ring-card {
-      animation-play-state: running;
+      animation-play-state: paused;
     }
     .hand-ring-card {
       position: absolute;
@@ -2864,12 +2864,15 @@
       const stage = document.querySelector(".layout-cylinder-stage");
       if (!cylinder || !stage) return;
       let active = !("IntersectionObserver" in window);
+      let paused = false;
       let rafId = 0;
-      const startedAt = performance.now();
+      let pausedAt = null;
+      let startedAt = performance.now();
       const duration = 56000;
       const render = (time) => {
         rafId = 0;
         if (!active || document.visibilityState !== "visible") return;
+        if (paused) return;
         const angle = ((time - startedAt) / duration) * 360;
         stage.style.setProperty("--spin", `${-angle}deg`);
         stage.style.setProperty("--spin-face", `${angle}deg`);
@@ -2889,6 +2892,27 @@
         if (active) startLoop();
         else stopLoop();
       };
+      const pauseMotion = () => {
+        if (paused) return;
+        paused = true;
+        pausedAt = performance.now();
+        stopLoop();
+      };
+      const resumeMotion = () => {
+        if (!paused) return;
+        if (pausedAt !== null) {
+          startedAt += performance.now() - pausedAt;
+        }
+        paused = false;
+        pausedAt = null;
+        startLoop();
+      };
+      cylinder.querySelectorAll(".layout-cylinder-card").forEach((card) => {
+        card.addEventListener("pointerenter", pauseMotion, { passive: true });
+        card.addEventListener("pointerleave", resumeMotion, { passive: true });
+        card.addEventListener("focusin", pauseMotion);
+        card.addEventListener("focusout", resumeMotion);
+      });
       if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
           setActive(entries.some((entry) => entry.isIntersecting));
@@ -2999,6 +3023,8 @@
         startLoop();
       };
       cards.forEach((card) => {
+        card.addEventListener("pointerenter", pauseRing, { passive: true });
+        card.addEventListener("pointerleave", resumeRing, { passive: true });
         card.addEventListener("focusin", pauseRing);
         card.addEventListener("focusout", resumeRing);
       });
