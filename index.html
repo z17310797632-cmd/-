@@ -737,7 +737,8 @@
       height: clamp(420px, 51vw, 600px);
       margin-top: 8px;
       overflow: hidden;
-      overscroll-behavior: contain;
+      overscroll-behavior: auto;
+      touch-action: pan-y;
       perspective: 2600px;
       isolation: isolate;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -761,19 +762,8 @@
       --spin: 0deg;
       --spin-face: 0deg;
       transform-style: preserve-3d;
-      animation: layoutCylinderSpin 56s linear infinite;
-      animation-play-state: paused;
       will-change: transform;
       pointer-events: none;
-    }
-    .layout-cylinder.is-motion-active .layout-cylinder-stage {
-      animation-play-state: running;
-    }
-    @media (hover: hover) and (pointer: fine) {
-      .layout-cylinder:has(.layout-cylinder-card:hover) .layout-cylinder-stage,
-      .layout-cylinder:has(.layout-cylinder-card:focus-visible) .layout-cylinder-stage {
-        animation-play-state: paused;
-      }
     }
     .layout-cylinder-card {
       position: absolute;
@@ -790,6 +780,7 @@
       color: inherit;
       cursor: zoom-in;
       pointer-events: auto;
+      touch-action: pan-y;
       overflow: hidden;
       box-shadow: 0 24px 52px rgba(0, 0, 0, 0.42);
       transform:
@@ -822,7 +813,8 @@
       height: clamp(360px, 37vw, 460px);
       margin-top: 34px;
       overflow: hidden;
-      overscroll-behavior: contain;
+      overscroll-behavior: auto;
+      touch-action: pan-y;
       perspective: 900px;
       isolation: isolate;
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -854,7 +846,7 @@
     }
     .hand-ring-stage:has(.hand-ring-card:hover) .hand-ring-card,
     .hand-ring-stage:has(.hand-ring-card:focus-visible) .hand-ring-card {
-      animation-play-state: paused;
+      animation-play-state: running;
     }
     .hand-ring-card {
       position: absolute;
@@ -870,6 +862,7 @@
       color: inherit;
       cursor: var(--hand-cursor, zoom-in);
       pointer-events: var(--hand-pointer, auto);
+      touch-action: pan-y;
       overflow: hidden;
       box-shadow: 0 22px 50px rgba(0, 0, 0, 0.44);
       opacity: var(--hand-opacity, 1);
@@ -2865,6 +2858,50 @@
       });
       updatePreview(cards.find((card) => card.classList.contains("is-selected")) || cards[0]);
     }
+    function initLayoutCylinderMotion() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const cylinder = document.querySelector(".layout-cylinder");
+      const stage = document.querySelector(".layout-cylinder-stage");
+      if (!cylinder || !stage) return;
+      let active = !("IntersectionObserver" in window);
+      let rafId = 0;
+      const startedAt = performance.now();
+      const duration = 56000;
+      const render = (time) => {
+        rafId = 0;
+        if (!active || document.visibilityState !== "visible") return;
+        const angle = ((time - startedAt) / duration) * 360;
+        stage.style.setProperty("--spin", `${-angle}deg`);
+        stage.style.setProperty("--spin-face", `${angle}deg`);
+        rafId = requestAnimationFrame(render);
+      };
+      const startLoop = () => {
+        if (!rafId && active && document.visibilityState === "visible") {
+          rafId = requestAnimationFrame(render);
+        }
+      };
+      const stopLoop = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+      };
+      const setActive = (value) => {
+        active = value;
+        if (active) startLoop();
+        else stopLoop();
+      };
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          setActive(entries.some((entry) => entry.isIntersecting));
+        }, { rootMargin: "220px 0px" });
+        observer.observe(cylinder);
+      } else {
+        startLoop();
+      }
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") startLoop();
+        else stopLoop();
+      });
+    }
     function initHandRingMotion() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const ring = document.querySelector(".hand-ring");
@@ -2961,9 +2998,7 @@
         pausedAt = null;
         startLoop();
       };
-      ring.addEventListener("pointerleave", resumeRing);
       cards.forEach((card) => {
-        card.addEventListener("pointerenter", pauseRing);
         card.addEventListener("focusin", pauseRing);
         card.addEventListener("focusout", resumeRing);
       });
@@ -3298,6 +3333,7 @@
     initAvatarTilt();
     initMiniCardsTilt();
     initMiniCardsSelection();
+    initLayoutCylinderMotion();
     initHandRingMotion();
     initFluidHover();
     initImageFallbacks();
