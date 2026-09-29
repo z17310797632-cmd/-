@@ -711,18 +711,13 @@
       --spin: 0deg;
       --spin-face: 0deg;
       transform-style: preserve-3d;
-      animation: layoutCylinderSpin 56s linear infinite;
-      animation-play-state: paused;
-      will-change: --spin, --spin-face;
+      will-change: transform;
       pointer-events: none;
-    }
-    .layout-cylinder.is-motion-active .layout-cylinder-stage {
-      animation-play-state: running;
     }
     @media (hover: hover) and (pointer: fine) {
       .layout-cylinder:has(.layout-cylinder-card:hover) .layout-cylinder-stage,
       .layout-cylinder:has(.layout-cylinder-card:focus-visible) .layout-cylinder-stage {
-        animation-play-state: paused;
+        --layout-paused: 1;
       }
     }
     .layout-cylinder-card {
@@ -1594,22 +1589,49 @@
       .hero-grid { grid-template-columns: 1fr; gap: 8px; }
       .hero-copyblock { order: 2; padding-bottom: 0; }
       .profile-stage { order: 1; min-height: 320px; align-self: center; padding-bottom: 0; }
-      .portfolio-rail { margin-top: 0; padding: 18px 16px 48px; }
-      .hero-depth { width: min(100%, var(--max)); height: 156px; }
+      .portfolio-rail { margin-top: 0; padding: 22px 0 52px; overflow: visible; }
+      .hero-depth { width: 100%; height: 184px; overflow: visible; }
       #experience { padding-top: 24px; }
       .outline-word { left: 50%; right: auto; bottom: 54px; transform: translateX(-50%); font-size: clamp(64px, 18vw, 116px); }
-      .mini-card-strip { grid-template-columns: repeat(4, minmax(72px, 1fr)); gap: 10px; }
+      .mini-card-strip {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        min-width: 0;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        padding: 20px 18px 26px;
+        scroll-padding-inline: 18px;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .mini-card-strip::-webkit-scrollbar { display: none; }
       .mini-card {
+        flex: 0 0 clamp(122px, 33vw, 148px);
         min-height: 92px;
         background-size: contain;
         background-repeat: no-repeat;
         background-color: #050505;
+        scroll-snap-align: center;
+        transform:
+          translateY(var(--y, 0))
+          rotate(var(--r, 0deg))
+          rotateX(6deg)
+          scale(var(--card-scale, 1));
       }
-      .mini-card:nth-child(n + 5) { display: none; }
+      .mini-card:nth-child(n + 5) { display: block; }
       .mini-card.is-selected { display: block; }
       .rail-preview {
-        width: calc(100% - 32px);
-        top: 22px;
+        width: calc(100% - 36px);
+        top: 4px;
+        left: 18px;
+        transform: none;
       }
       h1 { font-size: 56px; line-height: 1.1; }
       .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; }
@@ -1639,17 +1661,17 @@
       .contact-card { grid-template-columns: 1fr; align-items: start; }
       .contact-actions { justify-items: start; padding-right: 0; transform: none; }
       .logo-tile { flex-basis: clamp(150px, 42vw, 210px); }
-      .logo-marquee:not(.typography-marquee) {
+      .typography-marquee {
         overflow: visible;
         gap: 10px;
         padding: 8px 0 4px;
       }
-      .logo-marquee:not(.typography-marquee) .logo-marquee-row {
+      .typography-marquee .logo-marquee-row {
         overflow: visible;
         -webkit-mask-image: none;
         mask-image: none;
       }
-      .logo-marquee:not(.typography-marquee) .logo-marquee-track {
+      .typography-marquee .logo-marquee-track {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         width: 100%;
@@ -1657,18 +1679,16 @@
         animation: none !important;
         transform: none !important;
       }
-      .logo-marquee:not(.typography-marquee) .logo-tile {
+      .typography-marquee .typography-tile {
         width: 100%;
         min-width: 0;
         flex: none;
       }
-      .logo-marquee:not(.typography-marquee) .logo-tile:nth-child(n + 13) {
-        display: none;
-      }
       .layout-cylinder {
-        --layout-radius: 560px;
-        --layout-card-height: clamp(192px, 48vw, 225px);
-        height: 460px;
+        --layout-radius: clamp(330px, 86vw, 520px);
+        --layout-card-height: clamp(176px, 48vw, 220px);
+        height: 430px;
+        perspective: 1700px;
       }
       .hand-ring {
         --hand-card-width: clamp(144px, 28vw, 188px);
@@ -1699,14 +1719,14 @@
       .section { width: calc(100% - 32px); }
       .section h2 { font-size: 32px; }
       .work-subhead h2 { font-size: 32px; }
-      .logo-marquee:not(.typography-marquee) .logo-marquee-track {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .typography-marquee .logo-marquee-track {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
       }
       .layout-cylinder {
-        --layout-radius: 460px;
-        --layout-card-height: 177px;
-        height: 390px;
+        --layout-radius: clamp(285px, 74vw, 340px);
+        --layout-card-height: clamp(160px, 45vw, 188px);
+        height: 360px;
       }
       .hand-ring {
         --hand-card-width: 138px;
@@ -1718,19 +1738,24 @@
       .contact-card .contact-note { font-size: 32px; }
       .contact-card { padding: 24px; }
       .avatar-3d { width: min(310px, 82vw); }
-      .portfolio-rail { padding: 12px 16px 40px; }
-      .hero-depth { width: 100%; height: 128px; }
+      .portfolio-rail { padding: 16px 0 42px; }
+      .hero-depth { width: 100%; height: 168px; }
       #experience { padding-top: 24px; }
-      .mini-card-strip { grid-template-columns: repeat(3, minmax(70px, 1fr)); }
+      .mini-card-strip {
+        gap: 8px;
+        padding: 22px 16px 24px;
+        scroll-padding-inline: 16px;
+      }
       .mini-card {
-        min-height: 82px;
+        flex-basis: 124px;
+        min-height: 86px;
         background-size: contain;
         background-repeat: no-repeat;
         background-color: #050505;
       }
-      .mini-card:nth-child(n + 4) { display: none; }
+      .mini-card:nth-child(n + 4) { display: block; }
       .mini-card.is-selected { display: block; }
-      .rail-preview { width: calc(100% - 32px); top: 18px; }
+      .rail-preview { width: calc(100% - 32px); top: 2px; left: 16px; transform: none; }
       .project-gallery { padding: 12px; }
       .gallery-bar { align-items: flex-start; }
       .gallery-title h2 { font-size: 21px; }
@@ -2693,6 +2718,45 @@
       });
       updatePreview(cards.find((card) => card.classList.contains("is-selected")) || cards[0]);
     }
+    function initLayoutCylinderMotion() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const cylinders = Array.from(document.querySelectorAll(".layout-cylinder"));
+      if (!cylinders.length) return;
+      let rafId = 0;
+      let startedAt = performance.now();
+      const duration = 42000;
+      const render = (time) => {
+        rafId = 0;
+        if (document.visibilityState !== "visible") return;
+        const progress = ((time - startedAt) / duration) % 1;
+        const spin = progress * -360;
+        const face = progress * 360;
+        cylinders.forEach((cylinder) => {
+          if (!cylinder.classList.contains("is-motion-active")) return;
+          cylinder.style.setProperty("--spin", `${spin}deg`);
+          cylinder.style.setProperty("--spin-face", `${face}deg`);
+        });
+        rafId = requestAnimationFrame(render);
+      };
+      const start = () => {
+        if (!rafId && document.visibilityState === "visible") {
+          rafId = requestAnimationFrame(render);
+        }
+      };
+      const stop = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+      };
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          startedAt = performance.now();
+          start();
+        } else {
+          stop();
+        }
+      });
+      start();
+    }
     function initHandRingMotion() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const ring = document.querySelector(".hand-ring");
@@ -3048,6 +3112,7 @@
     initAvatarTilt();
     initMiniCardsTilt();
     initMiniCardsSelection();
+    initLayoutCylinderMotion();
     initHandRingMotion();
     initFluidHover();
     initNavTransitions();
