@@ -201,10 +201,30 @@
     .opening-copy strong {
       display: block;
       color: var(--white);
-      font-size: clamp(40px, 9vw, 112px);
-      line-height: 0.88;
+      font-size: clamp(56px, 12vw, 152px);
+      line-height: 0.82;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.035em;
+      transform-origin: 50% 50%;
+    }
+    .opening-copy strong span {
+      color: var(--white);
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+    }
+    .opening-title-full,
+    .opening-title-half {
+      display: inline-block;
+      will-change: transform, opacity, filter, clip-path;
+    }
+    .opening-title-split {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.08em;
+      white-space: nowrap;
+      will-change: transform, opacity, filter;
     }
     @media (max-width: 768px) {
       .opening-copy {
@@ -212,8 +232,8 @@
         padding: 0 20px;
       }
       .opening-copy strong {
-        font-size: clamp(42px, 16vw, 74px);
-        line-height: 0.92;
+        font-size: clamp(44px, 13vw, 68px);
+        line-height: 0.88;
       }
     }
     @media (max-width: 480px) {
@@ -1971,7 +1991,13 @@
     <div class="opening-scan"></div>
     <div class="opening-copy">
       <span>PORTFOLIO 2026</span>
-      <strong>ZHANG XUE YUAN</strong>
+      <strong>
+        <span class="opening-title-full">ZHANG XUE YUAN</span>
+        <span class="opening-title-split" aria-hidden="true">
+          <span class="opening-title-half opening-title-left">ZHANG XUE</span>
+          <span class="opening-title-half opening-title-right">YUAN</span>
+        </span>
+      </strong>
     </div>
   </div>
   <header class="nav-wrap" aria-label="站点导航">
@@ -2724,6 +2750,26 @@
         "--line-opacity": 0,
         "--line-blur": "14px",
       });
+      const titleMode = new URLSearchParams(location.search).get("preview") || "";
+      const titleSplitMode = titleMode.includes("title-b");
+      gsap.set(".opening-copy", { autoAlpha: 1 });
+      gsap.set(".opening-copy > span", { autoAlpha: 0, y: 14, filter: "blur(10px)" });
+      gsap.set(".opening-title-full", { display: titleSplitMode ? "none" : "inline-block" });
+      gsap.set(".opening-title-split", { display: titleSplitMode ? "inline-flex" : "none" });
+      if (titleSplitMode) {
+        gsap.set(".opening-title-split", { autoAlpha: 1, filter: "blur(12px)" });
+        gsap.set(".opening-title-left", { autoAlpha: 0, xPercent: -115, y: 18, skewX: -10, clipPath: "inset(0 100% 0 0)" });
+        gsap.set(".opening-title-right", { autoAlpha: 0, xPercent: 115, y: -16, skewX: 10, clipPath: "inset(0 0 0 100%)" });
+      } else {
+        gsap.set(".opening-title-full", {
+          autoAlpha: 0,
+          y: 46,
+          scaleX: 1.12,
+          scaleY: 0.26,
+          clipPath: "inset(48% 0 48% 0)",
+          filter: "blur(16px)",
+        });
+      }
       tl.addLabel("lines", 0)
         .to(".opening-slices", {
           "--line-a-x": "0vw",
@@ -2733,8 +2779,39 @@
           "--line-blur": "0px",
           duration: 0.48,
         }, "lines")
-        .fromTo(".opening-copy", { autoAlpha: 0, y: 28, scaleY: 0.76, filter: "blur(14px)" }, { autoAlpha: 1, y: 0, scaleY: 1, filter: "blur(0px)", duration: 0.34 }, 0.14)
-        .to(".opening-scan", { scaleX: 1, duration: 0.42 }, 0.2)
+        .to(".opening-copy > span", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.28 }, 0.1);
+      if (titleSplitMode) {
+        tl.to(".opening-title-split", { filter: "blur(0px)", duration: 0.36 }, 0.12)
+          .to(".opening-title-left", {
+            autoAlpha: 1,
+            xPercent: 0,
+            y: 0,
+            skewX: 0,
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.78,
+          }, 0.14)
+          .to(".opening-title-right", {
+            autoAlpha: 1,
+            xPercent: 0,
+            y: 0,
+            skewX: 0,
+            clipPath: "inset(0 0 0 0%)",
+            duration: 0.78,
+          }, 0.18)
+          .to(".opening-copy strong", { scaleX: 1.045, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 0.86);
+      } else {
+        tl.to(".opening-title-full", {
+          autoAlpha: 1,
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          clipPath: "inset(0% 0 0% 0)",
+          filter: "blur(0px)",
+          duration: 0.78,
+        }, 0.13)
+          .to(".opening-copy strong", { scaleY: 1.075, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 0.84);
+      }
+      tl.to(".opening-scan", { scaleX: 1, duration: 0.42 }, 0.2)
         .to(".opening-slices", {
           "--line-a-x": "-34vw",
           "--line-b-x": "34vw",
@@ -2743,21 +2820,21 @@
           "--line-blur": "8px",
           duration: 0.46,
           ease: "power3.in",
-        }, 0.56)
-        .to(".opening-copy", { y: -18, autoAlpha: 0, filter: "blur(9px)", duration: 0.28, ease: "power3.in" }, 0.58)
-        .to(".opening-panel-top", { yPercent: -100, duration: 0.62, ease: "expo.inOut" }, 0.62)
-        .to(".opening-panel-bottom", { yPercent: 100, duration: 0.62, ease: "expo.inOut" }, 0.62)
-        .to(".opening-scan", { autoAlpha: 0, scaleX: 0.24, duration: 0.26, ease: "power3.in" }, 0.72)
-        .to(".word-mask", { clipPath: "inset(0 0 0% 0)", duration: 0.62 }, 0.72)
-        .to(".reveal-word", { yPercent: 0, scaleY: 1, skewY: 0, filter: "blur(0px)", duration: 0.72 }, 0.74)
-        .to(".nav-wrap", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.48 }, 0.78)
-        .to(".profile-stage", { autoAlpha: 1, x: 0, scale: 1, rotateY: 0, filter: "blur(0px)", duration: 0.84 }, 0.82)
-        .to(".portrait", { clipPath: "inset(0 0% 0 0% round 999px)", scale: 1, duration: 0.82 }, 0.84)
-        .to(".portrait img", { x: 0, scale: 1.04, filter: "grayscale(1) contrast(1.12) brightness(0.9) blur(0px)", duration: 0.82 }, 0.88)
-        .to(".hero .kicker, .hero-copy, .hero-actions", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.52 }, 0.98)
-        .to(".tag-row .tag", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 0.42 }, 1.08)
-        .to(".portfolio-rail", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.58 }, 1.14)
-        .to(".mini-card", { autoAlpha: 1, filter: "blur(0px) brightness(1)", stagger: { each: 0.04, from: "center" }, duration: 0.48 }, 1.24);
+        }, 0.98)
+        .to(".opening-copy", { y: -18, autoAlpha: 0, filter: "blur(9px)", duration: 0.3, ease: "power3.in" }, 1.02)
+        .to(".opening-panel-top", { yPercent: -100, duration: 0.62, ease: "expo.inOut" }, 1.08)
+        .to(".opening-panel-bottom", { yPercent: 100, duration: 0.62, ease: "expo.inOut" }, 1.08)
+        .to(".opening-scan", { autoAlpha: 0, scaleX: 0.24, duration: 0.26, ease: "power3.in" }, 1.16)
+        .to(".word-mask", { clipPath: "inset(0 0 0% 0)", duration: 0.62 }, 1.18)
+        .to(".reveal-word", { yPercent: 0, scaleY: 1, skewY: 0, filter: "blur(0px)", duration: 0.72 }, 1.2)
+        .to(".nav-wrap", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.48 }, 1.24)
+        .to(".profile-stage", { autoAlpha: 1, x: 0, scale: 1, rotateY: 0, filter: "blur(0px)", duration: 0.84 }, 1.28)
+        .to(".portrait", { clipPath: "inset(0 0% 0 0% round 999px)", scale: 1, duration: 0.82 }, 1.3)
+        .to(".portrait img", { x: 0, scale: 1.04, filter: "grayscale(1) contrast(1.12) brightness(0.9) blur(0px)", duration: 0.82 }, 1.34)
+        .to(".hero .kicker, .hero-copy, .hero-actions", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.52 }, 1.44)
+        .to(".tag-row .tag", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 0.42 }, 1.54)
+        .to(".portfolio-rail", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.58 }, 1.6)
+        .to(".mini-card", { autoAlpha: 1, filter: "blur(0px) brightness(1)", stagger: { each: 0.04, from: "center" }, duration: 0.48 }, 1.7);
       return tl;
     }
     function animateTitleBlock(block, index) {
