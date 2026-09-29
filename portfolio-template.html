@@ -1183,7 +1183,9 @@
       overflow: hidden;
       transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms ease, background 150ms ease;
     }
-    .card:hover { transform: translateY(-4px); border-color: rgba(0, 240, 255, 0.42); background: rgba(17, 17, 17, 0.78); }
+    @media (hover: hover) and (pointer: fine) {
+      .card:hover { transform: translateY(-4px); border-color: rgba(0, 240, 255, 0.42); background: rgba(17, 17, 17, 0.78); }
+    }
     .card-pad { padding: 24px; }
     .timeline-meta { display: flex; justify-content: space-between; gap: 16px; color: var(--muted); font-size: 14px; line-height: 20px; }
     .card h3 { margin: 0; font-size: 20px; line-height: 1.25; font-weight: 600; }
@@ -1228,14 +1230,13 @@
       opacity: 1;
     }
     .project-media img {
-      --media-y: 0px;
       --media-scale: 1;
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
       will-change: transform;
-      transform: translateY(var(--media-y)) scale(var(--media-scale));
+      transform: scale(var(--media-scale));
       transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1), filter 180ms ease;
     }
     .project-card:focus-visible .project-media img {
@@ -1638,6 +1639,32 @@
       .contact-card { grid-template-columns: 1fr; align-items: start; }
       .contact-actions { justify-items: start; padding-right: 0; transform: none; }
       .logo-tile { flex-basis: clamp(150px, 42vw, 210px); }
+      .logo-marquee:not(.typography-marquee) {
+        overflow: visible;
+        gap: 10px;
+        padding: 8px 0 4px;
+      }
+      .logo-marquee:not(.typography-marquee) .logo-marquee-row {
+        overflow: visible;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+      .logo-marquee:not(.typography-marquee) .logo-marquee-track {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+        gap: 10px;
+        animation: none !important;
+        transform: none !important;
+      }
+      .logo-marquee:not(.typography-marquee) .logo-tile {
+        width: 100%;
+        min-width: 0;
+        flex: none;
+      }
+      .logo-marquee:not(.typography-marquee) .logo-tile:nth-child(n + 13) {
+        display: none;
+      }
       .layout-cylinder {
         --layout-radius: 560px;
         --layout-card-height: clamp(192px, 48vw, 225px);
@@ -1672,6 +1699,10 @@
       .section { width: calc(100% - 32px); }
       .section h2 { font-size: 32px; }
       .work-subhead h2 { font-size: 32px; }
+      .logo-marquee:not(.typography-marquee) .logo-marquee-track {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
       .layout-cylinder {
         --layout-radius: 460px;
         --layout-card-height: 177px;
@@ -1877,24 +1908,24 @@
       <div class="grid-3">
         <button class="card project-card reveal" type="button" data-gallery-open="wenyi" aria-haspopup="dialog" aria-controls="wenyi-gallery">
           <div class="project-media">
-            <img src="assets/wenyi/wenyi-01.jpg" alt="闻忆品牌设计提案封面" loading="lazy" decoding="async" width="1800" height="1350">
+            <img src="assets/wenyi/wenyi-01.jpg" alt="闻忆香薰蜡烛封面" loading="lazy" decoding="async" width="1800" height="1350">
             <span class="project-detail">查看详情</span>
           </div>
-          <div class="card-pad"><h3>闻忆 / 品牌设计提案</h3><p>东方草木空间香氛品牌，包含定位、标志、色彩、字体、包装与产品视觉。</p></div>
+          <div class="card-pad"><h3>闻忆 / 香薰蜡烛</h3><p>东方草木香薰蜡烛品牌，包含定位、标志、色彩、字体、包装与产品视觉。</p></div>
         </button>
         <button class="card project-card reveal" type="button" data-gallery-open="orbi" aria-haspopup="dialog" aria-controls="orbi-gallery">
           <div class="project-media">
-            <img src="assets/orbi/orbi-01.jpg" alt="ORBI 浓缩咖啡液包装设计封面" loading="lazy" decoding="async" width="1800" height="1351">
+            <img src="assets/orbi/orbi-01.jpg" alt="ORBI 浓缩咖啡液封面" loading="lazy" decoding="async" width="1800" height="1351">
             <span class="project-detail">查看详情</span>
           </div>
-          <div class="card-pad"><h3>ORBI / 浓缩咖啡液包装设计</h3><p>精品速饮咖啡品牌，包含策略、标志、色彩、包装结构与产品场景视觉。</p></div>
+          <div class="card-pad"><h3>ORBI / 浓缩咖啡液</h3><p>精品速饮咖啡品牌，包含策略、标志、色彩、包装结构与产品场景视觉。</p></div>
         </button>
         <button class="card project-card reveal" type="button" data-gallery-open="glint" aria-haspopup="dialog" aria-controls="glint-gallery">
           <div class="project-media">
-            <img src="assets/glint/glint-01.jpg" alt="GLINT 彩色隐形眼镜品牌设计封面" loading="lazy" decoding="async" width="1800" height="1350">
+            <img src="assets/glint/glint-01.jpg" alt="GLINT 美瞳封面" loading="lazy" decoding="async" width="1800" height="1350">
             <span class="project-detail">查看详情</span>
           </div>
-          <div class="card-pad"><h3>GLINT / 彩色隐形眼镜品牌设计</h3><p>彩瞳与护理液品牌，包含定位、标志、色彩系统、包装与产品场景视觉。</p></div>
+          <div class="card-pad"><h3>GLINT / 美瞳</h3><p>美瞳与护理液品牌，包含定位、标志、色彩系统、包装与产品场景视觉。</p></div>
         </button>
       </div>
       <div class="work-subhead reveal" id="logo-design">
@@ -2143,29 +2174,29 @@
       <div class="gallery-shell">
         <div class="gallery-bar">
           <div class="gallery-title">
-            <h2 id="wenyi-gallery-title">闻忆 / 品牌设计提案</h2>
+            <h2 id="wenyi-gallery-title">闻忆 / 香薰蜡烛</h2>
           </div>
           <button class="gallery-close" type="button" data-gallery-close>关闭</button>
         </div>
         <div class="gallery-stack">
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-01.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-02.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-03.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1662" height="1800"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-04.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1397"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-05.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-06.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-07.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-08.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-09.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-10.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-11.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-12.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-13.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-14.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-15.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-16.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-17.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-18.jpg" alt="闻忆品牌设计提案展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-01.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-02.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-03.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1662" height="1800"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-04.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1397"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-05.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-06.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-07.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-08.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-09.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-10.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-11.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-12.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-13.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-14.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-15.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-16.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-17.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/wenyi/wenyi-18.jpg" alt="闻忆香薰蜡烛展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
         </div>
       </div>
     </section>
@@ -2174,27 +2205,27 @@
       <div class="gallery-shell">
         <div class="gallery-bar">
           <div class="gallery-title">
-            <h2 id="orbi-gallery-title">ORBI / 浓缩咖啡液包装设计</h2>
+            <h2 id="orbi-gallery-title">ORBI / 浓缩咖啡液</h2>
           </div>
           <button class="gallery-close" type="button" data-gallery-close>关闭</button>
         </div>
         <div class="gallery-stack">
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-01.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-02.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1105"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-03.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-04.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1355" height="1800"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-05.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-06.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-07.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-08.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1396" height="1800"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-09.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-10.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-11.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-12.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-13.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-14.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-15.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/orbi/orbi-16.jpg" alt="ORBI 浓缩咖啡液包装设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-01.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-02.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1105"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-03.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1351"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-04.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1355" height="1800"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-05.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-06.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-07.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-08.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1396" height="1800"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-09.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-10.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-11.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-12.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-13.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-14.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-15.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/orbi/orbi-16.jpg" alt="ORBI 浓缩咖啡液展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
         </div>
       </div>
     </section>
@@ -2203,25 +2234,25 @@
       <div class="gallery-shell">
         <div class="gallery-bar">
           <div class="gallery-title">
-            <h2 id="glint-gallery-title">GLINT / 彩色隐形眼镜品牌设计</h2>
+            <h2 id="glint-gallery-title">GLINT / 美瞳</h2>
           </div>
           <button class="gallery-close" type="button" data-gallery-close>关闭</button>
         </div>
         <div class="gallery-stack">
-          <figure class="gallery-frame"><img src="assets/glint/glint-01.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-02.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-03.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-04.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-05.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-06.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-07.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-08.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-09.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-10.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1065" height="1800"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-11.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-12.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-13.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
-          <figure class="gallery-frame"><img src="assets/glint/glint-14.jpg" alt="GLINT 彩色隐形眼镜品牌设计展示图" loading="lazy" decoding="async" width="1447" height="1800"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-01.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-02.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-03.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-04.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-05.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-06.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-07.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-08.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-09.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-10.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1065" height="1800"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-11.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-12.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-13.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1800" height="1350"></figure>
+          <figure class="gallery-frame"><img src="assets/glint/glint-14.jpg" alt="GLINT 美瞳展示图" loading="lazy" decoding="async" width="1447" height="1800"></figure>
         </div>
       </div>
     </section>
@@ -2533,19 +2564,6 @@
       document.querySelectorAll(".work-subhead").forEach((subhead, index) => {
         const target = subhead.nextElementSibling;
         if (target) animateModuleItems(subhead, [target], index + 40);
-      });
-      document.querySelectorAll(".project-media img").forEach((image, index) => {
-        gsap.fromTo(image, { "--media-y": "-14px" }, {
-          "--media-y": "18px",
-          ease: "none",
-          scrollTrigger: {
-            trigger: image.closest(".project-card") || image,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.8,
-            refreshPriority: index + 80,
-          },
-        });
       });
       window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
     }
