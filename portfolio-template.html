@@ -1706,6 +1706,27 @@
       .project-gallery { padding: 18px; }
       .gallery-title h2 { font-size: 24px; }
     }
+    @media (min-width: 561px) and (max-width: 900px) {
+      .grid-3,
+      .grid-4,
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .grid-3 > .project-card:nth-child(3) {
+        grid-column: 1 / -1;
+      }
+      .grid-3 > .project-card:nth-child(3) .project-media {
+        aspect-ratio: 16 / 7;
+      }
+      .contact-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+      .contact-actions {
+        align-self: end;
+        justify-items: end;
+      }
+    }
     @media (max-width: 560px) {
       .nav-wrap {
         top: max(10px, env(safe-area-inset-top));
@@ -1725,6 +1746,9 @@
       .section { width: calc(100% - 32px); }
       .section h2 { font-size: 32px; }
       .work-subhead h2 { font-size: 32px; }
+      .grid-3, .grid-2, .grid-4 { gap: 12px; }
+      .card-pad { padding: 20px; }
+      .project-media { min-height: 168px; }
       .logo-marquee { margin-top: 12px; }
       .logo-tile { flex-basis: clamp(112px, 31vw, 136px); }
       .typography-tile { flex-basis: clamp(132px, 37vw, 164px); }
