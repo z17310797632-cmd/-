@@ -678,6 +678,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     @property --spin {
       syntax: "<angle>";
@@ -773,6 +775,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .hand-ring {
       --hand-card-width: clamp(170px, 17vw, 230px);
@@ -867,6 +871,8 @@
       height: 100%;
       object-fit: cover;
       background: transparent;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .logo-lightbox[hidden] { display: none; }
     .logo-lightbox {
@@ -1591,6 +1597,10 @@
       :where(#about, #strengths, #experience, #work, #logo-design, #typography-design, #layout-design, #hand-drawing, #contact) {
         scroll-margin-top: 116px;
       }
+      .section {
+        content-visibility: visible;
+        contain-intrinsic-size: auto;
+      }
       .nav-wrap {
         top: max(12px, env(safe-area-inset-top));
         width: calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
@@ -1730,8 +1740,12 @@
         animation-duration: 56s;
       }
       .logo-marquee-row {
+        min-height: clamp(118px, 32vw, 160px);
         -webkit-mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
         mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
+      }
+      .typography-row {
+        min-height: clamp(136px, 36vw, 176px);
       }
       .layout-cylinder {
         --layout-radius: clamp(330px, 86vw, 520px);
@@ -1795,6 +1809,8 @@
       .logo-marquee { margin-top: 12px; }
       .logo-tile { flex-basis: clamp(112px, 31vw, 136px); }
       .typography-tile { flex-basis: clamp(132px, 37vw, 164px); }
+      .logo-marquee-row { min-height: clamp(112px, 31vw, 136px); }
+      .typography-row { min-height: clamp(132px, 37vw, 164px); }
       .layout-cylinder {
         --layout-radius: clamp(285px, 74vw, 340px);
         --layout-card-height: clamp(160px, 45vw, 188px);
@@ -2939,10 +2955,24 @@
       let lockedActiveId = null;
       let scrollToken = 0;
       let activeRaf = 0;
-      const setActive = (id) => {
-        links.forEach((link) => link.classList.toggle("is-active", link.dataset.navTarget === id));
+      const getNavOffset = () => {
+        const nav = document.querySelector(".nav-wrap");
+        if (!nav) return 96;
+        const rect = nav.getBoundingClientRect();
+        return Math.ceil(rect.bottom + 16);
       };
-      const navAnchor = () => Math.min(132, window.innerHeight * 0.28);
+      const setActive = (id) => {
+        let activeLink = null;
+        links.forEach((link) => {
+          const isActive = link.dataset.navTarget === id;
+          link.classList.toggle("is-active", isActive);
+          if (isActive) activeLink = link;
+        });
+        if (activeLink && window.matchMedia("(max-width: 900px)").matches) {
+          activeLink.scrollIntoView({ block: "nearest", inline: "center" });
+        }
+      };
+      const navAnchor = () => Math.min(window.innerHeight * 0.34, getNavOffset() + 28);
       const getActiveSection = () => {
         const anchor = navAnchor();
         const containing = sections.find((section) => {
@@ -2984,7 +3014,7 @@
         scrollToken = token;
         lockedActiveId = id;
         const start = window.scrollY;
-        const offset = 96;
+        const offset = getNavOffset();
         const end = start + target.getBoundingClientRect().top - offset;
         const distance = Math.abs(end - start);
         const duration = Math.min(420, Math.max(260, distance * 0.2));
