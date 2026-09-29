@@ -132,10 +132,72 @@
     }
     .opening-panel-top { top: 0; transform-origin: 50% 100%; }
     .opening-panel-bottom { bottom: 0; transform-origin: 50% 0; }
+    .opening-slices {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      perspective: 1100px;
+    }
+    .opening-slice {
+      position: absolute;
+      left: var(--slice-x);
+      top: var(--slice-y);
+      z-index: var(--slice-z, 1);
+      width: var(--slice-width, clamp(136px, 16vw, 244px));
+      aspect-ratio: var(--slice-ratio, 4 / 3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background-image: var(--slice-image);
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.62), inset 0 1px rgba(255, 255, 255, 0.16);
+      overflow: hidden;
+      opacity: 0;
+      filter: grayscale(1) contrast(1.08) brightness(0.62) blur(10px);
+      transform: translate3d(0, 0, 0) rotate(var(--slice-rotate, 0deg)) scale(0.86);
+      transform-style: preserve-3d;
+      will-change: transform, opacity, filter;
+    }
+    .opening-slice::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(115deg, transparent 0 42%, rgba(255, 255, 255, 0.34) 50%, transparent 58%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.46));
+      mix-blend-mode: screen;
+      opacity: 0.42;
+    }
+    .opening-slice-1 { --slice-x: 18%; --slice-y: 25%; --slice-rotate: -7deg; }
+    .opening-slice-2 { --slice-x: 18%; --slice-y: 59%; --slice-rotate: 5deg; }
+    .opening-slice-3 { --slice-x: 42%; --slice-y: 22%; --slice-rotate: -3deg; }
+    .opening-slice-4 { --slice-x: 66%; --slice-y: 65%; --slice-rotate: 6deg; --slice-ratio: 3 / 4; --slice-width: clamp(122px, 13vw, 196px); --slice-z: 2; }
+    .opening-slice-5 { --slice-x: 66%; --slice-y: 20%; --slice-rotate: -5deg; --slice-ratio: 3 / 4; --slice-width: clamp(116px, 12.5vw, 188px); }
+    .opening-slice-6 { --slice-x: 42%; --slice-y: 62%; --slice-rotate: 2deg; --slice-width: clamp(124px, 14.5vw, 218px); --slice-z: 3; }
+    .opening-slices {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08), transparent 24%),
+        linear-gradient(90deg, transparent 0 24%, rgba(255, 255, 255, 0.055) 49%, transparent 74%);
+    }
+    .opening-slices::before,
+    .opening-slices::after {
+      content: "";
+      position: absolute;
+      left: -10vw;
+      right: -10vw;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), rgba(255, 255, 255, 0.34), transparent);
+      opacity: 0.58;
+      transform: rotate(-7deg);
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.24);
+    }
+    .opening-slices::before { top: 31%; }
+    .opening-slices::after { bottom: 31%; transform: rotate(7deg); }
     .opening-scan {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: calc(50% + clamp(18px, 2.4vw, 28px));
       z-index: 3;
       width: min(82vw, 920px);
       height: 1px;
@@ -167,6 +229,31 @@
       line-height: 0.88;
       font-weight: 700;
       letter-spacing: -0.02em;
+    }
+    @media (max-width: 768px) {
+      .opening-slice {
+        width: var(--slice-width, clamp(108px, 34vw, 168px));
+        border-radius: 8px;
+      }
+      .opening-slice-1 { --slice-x: 8%; --slice-y: 28%; }
+      .opening-slice-2 { --slice-x: 8%; --slice-y: 60%; }
+      .opening-slice-3 { --slice-x: 36%; --slice-y: 25%; }
+      .opening-slice-4 { --slice-x: 64%; --slice-y: 68%; --slice-width: clamp(92px, 29vw, 142px); }
+      .opening-slice-5 { --slice-x: 64%; --slice-y: 24%; --slice-width: clamp(86px, 27vw, 132px); }
+      .opening-slice-6 { --slice-x: 36%; --slice-y: 64%; --slice-width: clamp(112px, 36vw, 164px); }
+      .opening-copy {
+        gap: 6px;
+        padding: 0 20px;
+      }
+      .opening-copy strong {
+        font-size: clamp(42px, 16vw, 74px);
+        line-height: 0.92;
+      }
+    }
+    @media (max-width: 480px) {
+      .opening-slice-5 { display: none; }
+      .opening-slices::before { top: 28%; }
+      .opening-slices::after { bottom: 28%; }
     }
 
     .wave-stage {
@@ -1915,6 +2002,14 @@
   <div class="opening-animation" aria-hidden="true" data-opening-animation>
     <div class="opening-panel opening-panel-top"></div>
     <div class="opening-panel opening-panel-bottom"></div>
+    <div class="opening-slices" aria-hidden="true">
+      <div class="opening-slice opening-slice-1" style="--slice-image:url('assets/wenyi/wenyi-01.jpg')"></div>
+      <div class="opening-slice opening-slice-2" style="--slice-image:url('assets/orbi/orbi-01.jpg')"></div>
+      <div class="opening-slice opening-slice-3" style="--slice-image:url('assets/glint/glint-01.jpg')"></div>
+      <div class="opening-slice opening-slice-4" style="--slice-image:url('assets/layout/layout-01.jpg')"></div>
+      <div class="opening-slice opening-slice-5" style="--slice-image:url('assets/hand/hand-01.jpg')"></div>
+      <div class="opening-slice opening-slice-6" style="--slice-image:url('assets/typography/typography-01.jpg')"></div>
+    </div>
     <div class="opening-scan"></div>
     <div class="opening-copy">
       <span>PORTFOLIO 2026</span>
@@ -2663,22 +2758,51 @@
       gsap.set(".portrait img", { x: -24, scale: 1.18, filter: "grayscale(1) contrast(1.22) brightness(0.72) blur(8px)" });
       gsap.set(".portfolio-rail", { autoAlpha: 0, y: 72, filter: "blur(14px)" });
       gsap.set(".mini-card", { autoAlpha: 0, filter: "blur(14px) brightness(0.72)" });
-      tl.fromTo(".opening-copy", { autoAlpha: 0, y: 30, scaleY: 0.76, filter: "blur(14px)" }, { autoAlpha: 1, y: 0, scaleY: 1, filter: "blur(0px)", duration: 0.32 }, 0)
-        .to(".opening-scan", { scaleX: 1, duration: 0.42 }, 0.05)
-        .to(".opening-copy", { y: -14, autoAlpha: 0, filter: "blur(8px)", duration: 0.26, ease: "power3.in" }, 0.38)
-        .to(".opening-panel-top", { yPercent: -100, duration: 0.58, ease: "expo.inOut" }, 0.34)
-        .to(".opening-panel-bottom", { yPercent: 100, duration: 0.58, ease: "expo.inOut" }, 0.34)
-        .to(".opening-scan", { autoAlpha: 0, scaleX: 0.22, duration: 0.26, ease: "power3.in" }, 0.46)
-        .to(".word-mask", { clipPath: "inset(0 0 0% 0)", duration: 0.62 }, 0.42)
-        .to(".reveal-word", { yPercent: 0, scaleY: 1, skewY: 0, filter: "blur(0px)", duration: 0.72 }, 0.44)
-        .to(".nav-wrap", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.48 }, 0.5)
-        .to(".profile-stage", { autoAlpha: 1, x: 0, scale: 1, rotateY: 0, filter: "blur(0px)", duration: 0.84 }, 0.52)
-        .to(".portrait", { clipPath: "inset(0 0% 0 0% round 999px)", scale: 1, duration: 0.82 }, 0.54)
-        .to(".portrait img", { x: 0, scale: 1.04, filter: "grayscale(1) contrast(1.12) brightness(0.9) blur(0px)", duration: 0.82 }, 0.58)
-        .to(".hero .kicker, .hero-copy, .hero-actions", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.52 }, 0.72)
-        .to(".tag-row .tag", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 0.42 }, 0.86)
-        .to(".portfolio-rail", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.58 }, 0.92)
-        .to(".mini-card", { autoAlpha: 1, filter: "blur(0px) brightness(1)", stagger: { each: 0.04, from: "center" }, duration: 0.48 }, 1.02);
+      gsap.set(".opening-slice", {
+        autoAlpha: 0,
+        x: (index) => index % 2 === 0 ? "-34vw" : "34vw",
+        y: (index) => index % 2 === 0 ? -34 : 34,
+        rotationY: (index) => index % 2 === 0 ? 18 : -18,
+        scale: 0.84,
+        filter: "grayscale(1) contrast(1.08) brightness(0.5) blur(12px)",
+        transformPerspective: 1100,
+      });
+      tl.addLabel("slices", 0)
+        .to(".opening-slice", {
+          autoAlpha: 0.86,
+          x: 0,
+          y: 0,
+          rotationY: 0,
+          scale: 1,
+          filter: "grayscale(1) contrast(1.08) brightness(0.9) blur(0px)",
+          duration: 0.46,
+          stagger: { each: 0.045, from: "center" },
+        }, "slices")
+        .fromTo(".opening-copy", { autoAlpha: 0, y: 28, scaleY: 0.76, filter: "blur(14px)" }, { autoAlpha: 1, y: 0, scaleY: 1, filter: "blur(0px)", duration: 0.34 }, 0.14)
+        .to(".opening-scan", { scaleX: 1, duration: 0.42 }, 0.2)
+        .to(".opening-slice", {
+          x: (index) => index % 2 === 0 ? "18vw" : "-18vw",
+          y: (index) => index % 2 === 0 ? 18 : -18,
+          autoAlpha: 0,
+          filter: "grayscale(1) contrast(1.2) brightness(0.34) blur(10px)",
+          duration: 0.34,
+          stagger: { each: 0.03, from: "edges" },
+          ease: "power3.in",
+        }, 0.56)
+        .to(".opening-copy", { y: -18, autoAlpha: 0, filter: "blur(9px)", duration: 0.28, ease: "power3.in" }, 0.58)
+        .to(".opening-panel-top", { yPercent: -100, duration: 0.62, ease: "expo.inOut" }, 0.62)
+        .to(".opening-panel-bottom", { yPercent: 100, duration: 0.62, ease: "expo.inOut" }, 0.62)
+        .to(".opening-scan", { autoAlpha: 0, scaleX: 0.24, duration: 0.26, ease: "power3.in" }, 0.72)
+        .to(".word-mask", { clipPath: "inset(0 0 0% 0)", duration: 0.62 }, 0.72)
+        .to(".reveal-word", { yPercent: 0, scaleY: 1, skewY: 0, filter: "blur(0px)", duration: 0.72 }, 0.74)
+        .to(".nav-wrap", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.48 }, 0.78)
+        .to(".profile-stage", { autoAlpha: 1, x: 0, scale: 1, rotateY: 0, filter: "blur(0px)", duration: 0.84 }, 0.82)
+        .to(".portrait", { clipPath: "inset(0 0% 0 0% round 999px)", scale: 1, duration: 0.82 }, 0.84)
+        .to(".portrait img", { x: 0, scale: 1.04, filter: "grayscale(1) contrast(1.12) brightness(0.9) blur(0px)", duration: 0.82 }, 0.88)
+        .to(".hero .kicker, .hero-copy, .hero-actions", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.52 }, 0.98)
+        .to(".tag-row .tag", { autoAlpha: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 0.42 }, 1.08)
+        .to(".portfolio-rail", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.58 }, 1.14)
+        .to(".mini-card", { autoAlpha: 1, filter: "blur(0px) brightness(1)", stagger: { each: 0.04, from: "center" }, duration: 0.48 }, 1.24);
       return tl;
     }
     function animateTitleBlock(block, index) {
