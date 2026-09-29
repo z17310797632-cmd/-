@@ -137,63 +137,39 @@
       inset: 0;
       z-index: 2;
       pointer-events: none;
-      perspective: 1100px;
-    }
-    .opening-slice {
-      position: absolute;
-      left: var(--slice-x);
-      top: var(--slice-y);
-      z-index: var(--slice-z, 1);
-      width: var(--slice-width, clamp(136px, 16vw, 244px));
-      aspect-ratio: var(--slice-ratio, 4 / 3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      background-image: var(--slice-image);
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.62), inset 0 1px rgba(255, 255, 255, 0.16);
-      overflow: hidden;
-      opacity: 0;
-      filter: grayscale(1) contrast(1.08) brightness(0.62) blur(10px);
-      transform: translate3d(0, 0, 0) rotate(var(--slice-rotate, 0deg)) scale(0.86);
-      transform-style: preserve-3d;
-      will-change: transform, opacity, filter;
-    }
-    .opening-slice::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(115deg, transparent 0 42%, rgba(255, 255, 255, 0.34) 50%, transparent 58%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.46));
-      mix-blend-mode: screen;
-      opacity: 0.42;
-    }
-    .opening-slice-1 { --slice-x: 18%; --slice-y: 25%; --slice-rotate: -7deg; }
-    .opening-slice-2 { --slice-x: 18%; --slice-y: 59%; --slice-rotate: 5deg; }
-    .opening-slice-3 { --slice-x: 42%; --slice-y: 22%; --slice-rotate: -3deg; }
-    .opening-slice-4 { --slice-x: 66%; --slice-y: 65%; --slice-rotate: 6deg; --slice-ratio: 3 / 4; --slice-width: clamp(122px, 13vw, 196px); --slice-z: 2; }
-    .opening-slice-5 { --slice-x: 66%; --slice-y: 20%; --slice-rotate: -5deg; --slice-ratio: 3 / 4; --slice-width: clamp(116px, 12.5vw, 188px); }
-    .opening-slice-6 { --slice-x: 42%; --slice-y: 62%; --slice-rotate: 2deg; --slice-width: clamp(124px, 14.5vw, 218px); --slice-z: 3; }
-    .opening-slices {
+      --line-a-x: 0vw;
+      --line-b-x: 0vw;
+      --line-gap: 0px;
+      --line-scale: 1;
+      --line-opacity: 0.58;
+      --line-blur: 0px;
       background:
         radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08), transparent 24%),
-        linear-gradient(90deg, transparent 0 24%, rgba(255, 255, 255, 0.055) 49%, transparent 74%);
+        linear-gradient(90deg, transparent 0 24%, rgba(255, 255, 255, 0.052) 49%, transparent 74%);
+      will-change: opacity, filter;
     }
     .opening-slices::before,
     .opening-slices::after {
       content: "";
       position: absolute;
-      left: -10vw;
-      right: -10vw;
+      left: -14vw;
+      right: -14vw;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), rgba(255, 255, 255, 0.34), transparent);
-      opacity: 0.58;
-      transform: rotate(-7deg);
+      opacity: var(--line-opacity);
       box-shadow: 0 0 24px rgba(0, 240, 255, 0.24);
+      filter: blur(var(--line-blur));
+      transform-origin: 50% 50%;
+      will-change: transform, opacity, filter;
     }
-    .opening-slices::before { top: 31%; }
-    .opening-slices::after { bottom: 31%; transform: rotate(7deg); }
+    .opening-slices::before {
+      top: 36%;
+      transform: translate3d(var(--line-a-x), calc(var(--line-gap) * -1), 0) rotate(-7deg) scaleX(var(--line-scale));
+    }
+    .opening-slices::after {
+      bottom: 30%;
+      transform: translate3d(var(--line-b-x), var(--line-gap), 0) rotate(7deg) scaleX(var(--line-scale));
+    }
     .opening-scan {
       position: absolute;
       left: 50%;
@@ -231,16 +207,6 @@
       letter-spacing: -0.02em;
     }
     @media (max-width: 768px) {
-      .opening-slice {
-        width: var(--slice-width, clamp(108px, 34vw, 168px));
-        border-radius: 8px;
-      }
-      .opening-slice-1 { --slice-x: 8%; --slice-y: 28%; }
-      .opening-slice-2 { --slice-x: 8%; --slice-y: 60%; }
-      .opening-slice-3 { --slice-x: 36%; --slice-y: 25%; }
-      .opening-slice-4 { --slice-x: 64%; --slice-y: 68%; --slice-width: clamp(92px, 29vw, 142px); }
-      .opening-slice-5 { --slice-x: 64%; --slice-y: 24%; --slice-width: clamp(86px, 27vw, 132px); }
-      .opening-slice-6 { --slice-x: 36%; --slice-y: 64%; --slice-width: clamp(112px, 36vw, 164px); }
       .opening-copy {
         gap: 6px;
         padding: 0 20px;
@@ -251,7 +217,6 @@
       }
     }
     @media (max-width: 480px) {
-      .opening-slice-5 { display: none; }
       .opening-slices::before { top: 28%; }
       .opening-slices::after { bottom: 28%; }
     }
@@ -2002,14 +1967,7 @@
   <div class="opening-animation" aria-hidden="true" data-opening-animation>
     <div class="opening-panel opening-panel-top"></div>
     <div class="opening-panel opening-panel-bottom"></div>
-    <div class="opening-slices" aria-hidden="true">
-      <div class="opening-slice opening-slice-1" style="--slice-image:url('assets/wenyi/wenyi-01.jpg')"></div>
-      <div class="opening-slice opening-slice-2" style="--slice-image:url('assets/orbi/orbi-01.jpg')"></div>
-      <div class="opening-slice opening-slice-3" style="--slice-image:url('assets/glint/glint-01.jpg')"></div>
-      <div class="opening-slice opening-slice-4" style="--slice-image:url('assets/layout/layout-01.jpg')"></div>
-      <div class="opening-slice opening-slice-5" style="--slice-image:url('assets/hand/hand-01.jpg')"></div>
-      <div class="opening-slice opening-slice-6" style="--slice-image:url('assets/typography/typography-01.jpg')"></div>
-    </div>
+    <div class="opening-slices" aria-hidden="true"></div>
     <div class="opening-scan"></div>
     <div class="opening-copy">
       <span>PORTFOLIO 2026</span>
@@ -2758,35 +2716,32 @@
       gsap.set(".portrait img", { x: -24, scale: 1.18, filter: "grayscale(1) contrast(1.22) brightness(0.72) blur(8px)" });
       gsap.set(".portfolio-rail", { autoAlpha: 0, y: 72, filter: "blur(14px)" });
       gsap.set(".mini-card", { autoAlpha: 0, filter: "blur(14px) brightness(0.72)" });
-      gsap.set(".opening-slice", {
-        autoAlpha: 0,
-        x: (index) => index % 2 === 0 ? "-34vw" : "34vw",
-        y: (index) => index % 2 === 0 ? -34 : 34,
-        rotationY: (index) => index % 2 === 0 ? 18 : -18,
-        scale: 0.84,
-        filter: "grayscale(1) contrast(1.08) brightness(0.5) blur(12px)",
-        transformPerspective: 1100,
+      gsap.set(".opening-slices", {
+        "--line-a-x": "-18vw",
+        "--line-b-x": "18vw",
+        "--line-gap": "0px",
+        "--line-scale": 0,
+        "--line-opacity": 0,
+        "--line-blur": "14px",
       });
-      tl.addLabel("slices", 0)
-        .to(".opening-slice", {
-          autoAlpha: 0.86,
-          x: 0,
-          y: 0,
-          rotationY: 0,
-          scale: 1,
-          filter: "grayscale(1) contrast(1.08) brightness(0.9) blur(0px)",
-          duration: 0.46,
-          stagger: { each: 0.045, from: "center" },
-        }, "slices")
+      tl.addLabel("lines", 0)
+        .to(".opening-slices", {
+          "--line-a-x": "0vw",
+          "--line-b-x": "0vw",
+          "--line-scale": 1,
+          "--line-opacity": 0.72,
+          "--line-blur": "0px",
+          duration: 0.48,
+        }, "lines")
         .fromTo(".opening-copy", { autoAlpha: 0, y: 28, scaleY: 0.76, filter: "blur(14px)" }, { autoAlpha: 1, y: 0, scaleY: 1, filter: "blur(0px)", duration: 0.34 }, 0.14)
         .to(".opening-scan", { scaleX: 1, duration: 0.42 }, 0.2)
-        .to(".opening-slice", {
-          x: (index) => index % 2 === 0 ? "18vw" : "-18vw",
-          y: (index) => index % 2 === 0 ? 18 : -18,
-          autoAlpha: 0,
-          filter: "grayscale(1) contrast(1.2) brightness(0.34) blur(10px)",
-          duration: 0.34,
-          stagger: { each: 0.03, from: "edges" },
+        .to(".opening-slices", {
+          "--line-a-x": "-34vw",
+          "--line-b-x": "34vw",
+          "--line-gap": "14vh",
+          "--line-opacity": 0,
+          "--line-blur": "8px",
+          duration: 0.46,
           ease: "power3.in",
         }, 0.56)
         .to(".opening-copy", { y: -18, autoAlpha: 0, filter: "blur(9px)", duration: 0.28, ease: "power3.in" }, 0.58)
