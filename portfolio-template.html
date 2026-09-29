@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>张雪源 - 个人作品集</title>
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1187166_qchqyjn1cqf.css">
   <script>
@@ -182,7 +182,10 @@
       border-radius: var(--pill);
       transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .nav-links a:hover { color: var(--white); transform: translateY(-1px); }
+    @media (hover: hover) and (pointer: fine) {
+      .nav-links a:hover { color: var(--white); transform: translateY(-1px); }
+      .nav-links a.is-active:hover { color: var(--black); }
+    }
     body.is-jumping .nav-links a:not(.is-active):hover {
       color: var(--muted);
       transform: none;
@@ -196,7 +199,6 @@
       border-color: rgba(0, 240, 255, 0.32);
       box-shadow: inset 0 1px rgba(255, 255, 255, 0.65), 0 10px 22px rgba(0, 0, 0, 0.24);
     }
-    .nav-links a.is-active:hover { color: var(--black); }
     @keyframes navJump {
       0% { opacity: 0; transform: scaleX(0); }
       42% { opacity: 1; transform: scaleX(1); }
@@ -221,7 +223,9 @@
       transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms ease, background 150ms ease;
     }
     .button > * { position: relative; z-index: 1; }
-    .button:hover { transform: translateY(-1px); }
+    @media (hover: hover) and (pointer: fine) {
+      .button:hover { transform: translateY(-1px); }
+    }
     .button.nav-contact.is-active {
       background: var(--accent);
       color: var(--black);
@@ -644,11 +648,17 @@
       box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
       transition: border-color 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .logo-tile:hover,
     .logo-tile:focus-visible {
       z-index: 2;
       border-color: rgba(0, 240, 255, 0.48);
       transform: translateY(-2px) scale(1.035);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .logo-tile:hover {
+        z-index: 2;
+        border-color: rgba(0, 240, 255, 0.48);
+        transform: translateY(-2px) scale(1.035);
+      }
     }
     .typography-tile {
       flex-basis: clamp(188px, 21vw, 268px);
@@ -709,9 +719,11 @@
     .layout-cylinder.is-motion-active .layout-cylinder-stage {
       animation-play-state: running;
     }
-    .layout-cylinder:has(.layout-cylinder-card:hover) .layout-cylinder-stage,
-    .layout-cylinder:has(.layout-cylinder-card:focus-visible) .layout-cylinder-stage {
-      animation-play-state: paused;
+    @media (hover: hover) and (pointer: fine) {
+      .layout-cylinder:has(.layout-cylinder-card:hover) .layout-cylinder-stage,
+      .layout-cylinder:has(.layout-cylinder-card:focus-visible) .layout-cylinder-stage {
+        animation-play-state: paused;
+      }
     }
     .layout-cylinder-card {
       position: absolute;
@@ -1152,9 +1164,11 @@
       pointer-events: none;
       z-index: 0;
     }
-    .fluid-reactive:hover::after {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.08);
+    @media (hover: hover) and (pointer: fine) {
+      .fluid-reactive:hover::after {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+      }
     }
     .fluid-reactive > * { position: relative; z-index: 1; }
     .card {
@@ -1210,7 +1224,6 @@
       opacity: 0;
       transition: opacity 180ms ease;
     }
-    .project-card:hover .project-media::before,
     .project-card:focus-visible .project-media::before {
       opacity: 1;
     }
@@ -1225,7 +1238,6 @@
       transform: translateY(var(--media-y)) scale(var(--media-scale));
       transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1), filter 180ms ease;
     }
-    .project-card:hover .project-media img,
     .project-card:focus-visible .project-media img {
       --media-scale: 1.04;
       filter: brightness(0.72);
@@ -1253,10 +1265,22 @@
       pointer-events: none;
       white-space: nowrap;
     }
-    .project-card:hover .project-detail,
     .project-card:focus-visible .project-detail {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .project-card:hover .project-media::before {
+        opacity: 1;
+      }
+      .project-card:hover .project-media img {
+        --media-scale: 1.04;
+        filter: brightness(0.72);
+      }
+      .project-card:hover .project-detail {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
     body.gallery-open { overflow: hidden; }
     .project-gallery[hidden] { display: none; }
@@ -1523,21 +1547,48 @@
       }
     }
     @media (max-width: 900px) {
-      .nav-wrap { width: calc(100% - 32px); }
-      .nav { flex-wrap: wrap; padding: 8px 8px 10px 18px; }
-      .brand { flex: 1; }
+      .nav-wrap {
+        top: max(12px, env(safe-area-inset-top));
+        width: calc(100% - 24px - env(safe-area-inset-left) - env(safe-area-inset-right));
+      }
+      .nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "links contact";
+        align-items: center;
+        gap: 8px;
+        min-height: 56px;
+        padding: 8px;
+      }
+      .brand-empty { display: none; }
       .nav-links {
-        order: 3;
+        grid-area: links;
+        min-width: 0;
         width: 100%;
         display: flex;
-        gap: 4px;
+        justify-content: flex-start;
+        gap: 6px;
         overflow-x: auto;
-        padding-top: 6px;
+        padding: 0 2px;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        font-size: 12px;
+        font-size: 13px;
       }
       .nav-links::-webkit-scrollbar { display: none; }
-      .nav-links a { flex: 0 0 auto; min-height: 32px; padding: 0 12px; }
+      .nav-links a {
+        flex: 0 0 auto;
+        min-height: 40px;
+        padding: 0 14px;
+        scroll-snap-align: start;
+      }
+      .nav-contact {
+        grid-area: contact;
+        min-height: 42px;
+        padding: 0 16px;
+        white-space: nowrap;
+      }
       .hero { padding: 112px 16px 48px; }
       .hero-grid { grid-template-columns: 1fr; gap: 8px; }
       .hero-copyblock { order: 2; padding-bottom: 0; }
@@ -1603,10 +1654,20 @@
       .gallery-title h2 { font-size: 24px; }
     }
     @media (max-width: 560px) {
-      .nav-wrap { top: 12px; width: calc(100% - 24px); }
+      .nav-wrap {
+        top: max(10px, env(safe-area-inset-top));
+        width: calc(100% - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+      }
+      .nav {
+        min-height: 52px;
+        padding: 7px;
+        gap: 6px;
+        border-radius: 28px;
+      }
       .button { min-height: 40px; padding: 0 16px; }
-      .nav-contact { min-height: 38px; padding: 0 14px; }
-      .nav-links a { padding: 0 10px; }
+      .nav-contact { min-height: 38px; padding: 0 12px; font-size: 13px; }
+      .nav-links { gap: 5px; font-size: 13px; }
+      .nav-links a { min-height: 36px; padding: 0 10px; }
       h1 { font-size: 42px; }
       .section { width: calc(100% - 32px); }
       .section h2 { font-size: 32px; }
@@ -1643,6 +1704,22 @@
       .gallery-bar { align-items: flex-start; }
       .gallery-title h2 { font-size: 21px; }
       .gallery-close { min-height: 38px; padding: 0 14px; }
+    }
+    @media (max-width: 420px) {
+      .nav {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "links"
+          "contact";
+        justify-items: stretch;
+        border-radius: 24px;
+      }
+      .nav-contact {
+        width: 100%;
+      }
+      .hero {
+        padding-top: 144px;
+      }
     }
   </style>
 </head>
